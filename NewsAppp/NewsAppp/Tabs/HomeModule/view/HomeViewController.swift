@@ -11,6 +11,10 @@ class HomeViewController: UIViewController {
     
     var presenter: HomePresenterProtocol!
     
+    private let refreshControl = UIRefreshControl()
+        
+    
+    
     private let tableView: UITableView = {
         let table = UITableView()
         
@@ -38,12 +42,21 @@ class HomeViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
+        tableView.refreshControl = refreshControl
+        
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
+    }
+    
+    @objc private func refreshData() {
+        presenter.getNews()
+        refreshControl.endRefreshing()
     }
 }
 
