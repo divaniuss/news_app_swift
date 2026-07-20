@@ -11,8 +11,11 @@ class HomeViewController: UIViewController {
     
     var presenter: HomePresenterProtocol!
     
+    private let searchController = UISearchController(searchResultsController: nil)
+    
     private let refreshControl = UIRefreshControl()
-        
+    
+    
     
     
     private let tableView: UITableView = {
@@ -30,7 +33,7 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
 //        title = "news"
-        
+        setupSearchController()
         setupTableView()
         presenter.getNews()
         
@@ -52,6 +55,17 @@ class HomeViewController: UIViewController {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
+    }
+    
+    private func setupSearchController() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search.."
+        
+        navigationItem.titleView = searchController.searchBar
+        searchController.hidesNavigationBarDuringPresentation = false
+        definesPresentationContext = true
+        
     }
     
     @objc private func refreshData() {
@@ -90,5 +104,14 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let selectedArticle = presenter.articles[indexPath.row]
         print("нажали на \(selectedArticle.title)")
+    }
+}
+
+
+extension HomeViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text =  searchController.searchBar.text else { return }
+        
+        presenter.search(query: text)
     }
 }

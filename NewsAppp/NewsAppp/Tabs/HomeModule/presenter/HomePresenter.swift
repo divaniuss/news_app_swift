@@ -12,6 +12,8 @@ class HomePresenter: HomePresenterProtocol {
     let networkService: NetworkManager
     var articles: [Article] = []
     
+    private var searchTimer: Timer?
+    
     required init(view: HomeViewProtocol, networkService: NetworkManager) {
         self.view = view
         self.networkService = networkService
@@ -30,5 +32,31 @@ class HomePresenter: HomePresenterProtocol {
             }
         }
         
+    }
+    
+    func search(query: String) {
+        searchTimer?.invalidate( )
+        guard !query.trimmingCharacters(in: .whitespaces).isEmpty else {
+            getNews()
+            return
+        }
+        
+        searchTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
+            guard let self = self else {return}
+            
+            self.networkService.searchNews(query: query) { [weak self ] result in
+                guard let self = self else {return}
+                
+                switch result{
+                case .success(let articles):
+                    self.articles = articles
+                    self.view?.success()
+                case .failure(let error):
+                    self.view?.failure(error: error)
+                }
+            
+            }
+        }
+            
     }
 }

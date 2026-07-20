@@ -14,5 +14,6 @@ protocol HomeViewProtocol: AnyObject {
 
 protocol HomePresenterProtocol: AnyObject {
     func getNews()
+    func search(query: String)
     var articles: [Article] { get }
 }
