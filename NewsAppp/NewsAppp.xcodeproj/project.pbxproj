@@ -8,11 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		8B61CCA23008B55E009F4D86 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 8B61CCA13008B55E009F4D86 /* .gitignore */; };
+		8B61CCA43008BA9A009F4D86 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8B61CCA33008BA9A009F4D86 /* Config.xcconfig */; };
+		8B61CCBF3008EE58009F4D86 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 8B61CCBE3008EE58009F4D86 /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		8B61CC873008B351009F4D86 /* NewsAppp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsAppp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B61CCA13008B55E009F4D86 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		8B61CCA33008BA9A009F4D86 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -41,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B61CCBF3008EE58009F4D86 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,6 +54,7 @@
 		8B61CC7E3008B351009F4D86 = {
 			isa = PBXGroup;
 			children = (
+				8B61CCA33008BA9A009F4D86 /* Config.xcconfig */,
 				8B61CCA13008B55E009F4D86 /* .gitignore */,
 				8B61CC893008B351009F4D86 /* NewsAppp */,
 				8B61CC883008B351009F4D86 /* Products */,
@@ -84,6 +89,7 @@
 			);
 			name = NewsAppp;
 			packageProductDependencies = (
+				8B61CCBE3008EE58009F4D86 /* Kingfisher */,
 			);
 			productName = NewsAppp;
 			productReference = 8B61CC873008B351009F4D86 /* NewsAppp.app */;
@@ -113,6 +119,9 @@
 			);
 			mainGroup = 8B61CC7E3008B351009F4D86;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				8B61CCBD3008EE58009F4D86 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8B61CC883008B351009F4D86 /* Products */;
 			projectDirPath = "";
@@ -129,6 +138,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B61CCA23008B55E009F4D86 /* .gitignore in Resources */,
+				8B61CCA43008BA9A009F4D86 /* Config.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -156,7 +166,6 @@
 				INFOPLIST_FILE = NewsAppp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -187,7 +196,6 @@
 				INFOPLIST_FILE = NewsAppp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -209,6 +217,7 @@
 		};
 		8B61CC9D3008B354009F4D86 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8B61CCA33008BA9A009F4D86 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -272,6 +281,7 @@
 		};
 		8B61CC9E3008B354009F4D86 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8B61CCA33008BA9A009F4D86 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -348,6 +358,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8B61CCBD3008EE58009F4D86 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8B61CCBE3008EE58009F4D86 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B61CCBD3008EE58009F4D86 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8B61CC7F3008B351009F4D86 /* Project object */;
 }
