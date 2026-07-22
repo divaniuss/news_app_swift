@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class HomeViewController: UIViewController {
     
@@ -70,16 +71,17 @@ class HomeViewController: UIViewController {
     
     @objc private func refreshData() {
         presenter.getNews()
-        refreshControl.endRefreshing()
     }
 }
 
 extension HomeViewController: HomeViewProtocol {
     func success() {
         tableView.reloadData()
+        refreshControl.endRefreshing()
     }
     func failure(error: Error) {
         print("Ошибка сети: \(error.localizedDescription)")
+        refreshControl.endRefreshing()
     }
 }
 
@@ -96,7 +98,10 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         }
         let article = presenter.articles[indexPath.row]
         
+        
         cell.configure(with: article)
+
+        
         return cell
     }
     
@@ -104,6 +109,32 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let selectedArticle = presenter.articles[indexPath.row]
         print("нажали на \(selectedArticle.title)")
+    }
+    
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let article = presenter.articles[indexPath.row]
+        
+        let isSaved = presenter.isSaved(article: article)
+        
+        let actionTitle = isSaved ? "Delete" : "To Favorite"
+        let actionIcon = isSaved ? "trash.fill" : "star.fill"
+        let actionColor = isSaved ? UIColor.systemRed : UIColor.systemCyan
+        let actionStyle: UIContextualAction.Style = isSaved ? .destructive : .normal
+        
+        let action = UIContextualAction(style: actionStyle, title: actionTitle) { [weak self] (action, view, completionHandler) in
+            self?.presenter.toggleFavorite(article: article)
+            completionHandler(true)
+        }
+        
+        action.backgroundColor = actionColor
+        action.image = UIImage(systemName: actionIcon)
+        
+    
+        
+        let configuration = UISwipeActionsConfiguration(actions: [action])
+        configuration.performsFirstActionWithFullSwipe = true
+
+        return configuration
     }
 }
 
@@ -115,3 +146,4 @@ extension HomeViewController: UISearchResultsUpdating {
         presenter.search(query: text)
     }
 }
+//ДОДЕЛАТЬ С WKWebView ОКНО НА НОВОСТЬ

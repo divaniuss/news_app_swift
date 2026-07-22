@@ -14,6 +14,8 @@ protocol HomeViewProtocol: AnyObject {
 
 protocol HomePresenterProtocol: AnyObject {
     func getNews()
+    func isSaved(article: Article) -> Bool
+    func toggleFavorite(article: Article)
     func search(query: String)
     var articles: [Article] { get }
 }

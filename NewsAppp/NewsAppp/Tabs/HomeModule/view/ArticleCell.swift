@@ -51,7 +51,7 @@ final class ArticleCell: UITableViewCell {
     private func setupViews() {
         contentView.addSubview(newsImageView)
         contentView.addSubview(titleLabel)
-        contentView.addSubview(sourceLabel) 
+        contentView.addSubview(sourceLabel)
     }
     
     private func setupConstraints() {
@@ -73,7 +73,8 @@ final class ArticleCell: UITableViewCell {
             sourceLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             sourceLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             sourceLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            sourceLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16)
+            sourceLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -16),
+    
         ])
     }
     

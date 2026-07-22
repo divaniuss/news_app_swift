@@ -59,4 +59,19 @@ class HomePresenter: HomePresenterProtocol {
         }
             
     }
+
+    
+    func isSaved(article: Article) -> Bool {
+        return CoreDataManager.shared.isSaved(url: article.url)
+    }
+    
+    func toggleFavorite(article: Article) {
+        if CoreDataManager.shared.isSaved(url: article.url){
+            CoreDataManager.shared.deleteArticle(url: article.url)
+        } else {
+            CoreDataManager.shared.saveArticle(title: article.title, url: article.url, urlToImage: article.urlToImage)
+        }
+    }
+    
+    
 }
