@@ -24,7 +24,7 @@ final class NetworkManager{
         return Bundle.main.infoDictionary?["API_KEY"] as? String
     }
     
-    func fetchTopHeadlines(completion: @escaping (Result<[Article],NetworkError>) -> Void) {
+    func fetchTopHeadlines(category: String?, completion: @escaping (Result<[Article],NetworkError>) -> Void) {
         guard let key = apiKey, !key.isEmpty else {
             DispatchQueue.main.async {
                 completion(.failure(.missingKey))
@@ -33,7 +33,13 @@ final class NetworkManager{
         }
         
         var components = URLComponents(string: "https://newsapi.org/v2/top-headlines")
-        components?.queryItems = [URLQueryItem(name: "country", value: "us")]
+        var queryItems = [URLQueryItem(name: "country", value: "us")]
+        
+        if let category = category {
+            queryItems.append(URLQueryItem(name: "category", value: category))
+        }
+        
+        components?.queryItems = queryItems
         
         guard let url = components?.url else {
             DispatchQueue.main.async {

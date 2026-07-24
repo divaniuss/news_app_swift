@@ -36,15 +36,11 @@ class MainTabBarController: UITabBarController {
         homeNav.tabBarItem = UITabBarItem(title: "News", image: UIImage(systemName: "newspaper"), tag: 0)
         
         
-        let categoriesVC = UIViewController()
-        categoriesVC.view.backgroundColor = .systemBackground
-        categoriesVC.title = "Categories"
+        let categoriesVC = ModuleBuilder.createCategoriesModule()
         let categoriesNav = UINavigationController(rootViewController: categoriesVC)
         categoriesNav.tabBarItem = UITabBarItem(title: "Categories", image: UIImage(systemName: "list.bullet"), tag: 1)
                 
-        let favoritesVC = UIViewController()
-        favoritesVC.view.backgroundColor = .systemBackground
-        favoritesVC.title = "Favorites"
+        let favoritesVC = ModuleBuilder.createFavoriteModule()
         let favoritesNav = UINavigationController(rootViewController: favoritesVC)
         favoritesNav.tabBarItem = UITabBarItem(title: "Favorites", image: UIImage(systemName: "star"), tag: 2)
         

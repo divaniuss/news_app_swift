@@ -20,14 +20,14 @@ class HomePresenter: HomePresenterProtocol {
     }
     
     func getNews() {
-        networkService.fetchTopHeadlines { [weak self] result in
+        networkService.fetchTopHeadlines(category: nil) { [weak self] result in
             guard let self = self else { return }
             
             switch result{
-            case.success(let articles):
+            case .success(let articles):
                 self.articles = articles
                 self.view?.success()
-            case.failure(let error):
+            case .failure(let error):
                 self.view?.failure(error: error)
             }
         }
@@ -69,7 +69,7 @@ class HomePresenter: HomePresenterProtocol {
         if CoreDataManager.shared.isSaved(url: article.url){
             CoreDataManager.shared.deleteArticle(url: article.url)
         } else {
-            CoreDataManager.shared.saveArticle(title: article.title, url: article.url, urlToImage: article.urlToImage)
+            CoreDataManager.shared.saveArticle(title: article.title, url: article.url, urlToImage: article.urlToImage, sourceName: article.source.name)
         }
     }
     

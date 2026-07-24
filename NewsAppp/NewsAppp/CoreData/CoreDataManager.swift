@@ -26,13 +26,14 @@ final class CoreDataManager {
         return persistentContainer.viewContext
     }
     
-    func saveArticle(title: String?, url: String?, urlToImage: String?){
+    func saveArticle(title: String?, url: String?, urlToImage: String?, sourceName: String?){
         if isSaved(url: url ?? "") {return}
         
         let favorite = FavoriteArticle(context: context)
         favorite.title = title
         favorite.url = url
         favorite.urlToImage = urlToImage
+        favorite.sourceName = sourceName
         
         do {
             try context.save()
@@ -68,5 +69,28 @@ final class CoreDataManager {
         }catch {
             print("delete error - \(error)")
         }
+    }
+    
+    func getAllFavorites() -> [Article]{
+        let request = NSFetchRequest<FavoriteArticle>(entityName: "FavoriteArticle")
+        do {
+            let savedEntities = try context.fetch(request)
+            return savedEntities.map { entity in
+                Article(
+                    source: Source(id: nil, name: entity.sourceName ?? "Unknown source"),
+                    author: nil,
+                    title: entity.title ?? "Без заголовка",
+                    description: nil,
+                    url: entity.url ?? "",
+                    urlToImage: entity.urlToImage,
+                    publishedAt: "",
+                    content: nil
+                )
+            }
+        } catch {
+            print("get favorites error - \(error)")
+            return []
+        }
+    
     }
 }

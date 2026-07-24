@@ -9,6 +9,8 @@ import UIKit
 
 protocol Builder {
     static func createHomeModule() -> UIViewController
+    static func createFavoriteModule() -> UIViewController
+    static func createCategoriesModule() -> UIViewController
 }
 class ModuleBuilder: Builder{
     static func createHomeModule() -> UIViewController {
@@ -19,6 +21,22 @@ class ModuleBuilder: Builder{
         let presenter = HomePresenter(view: view, networkService: networkService)
         view.presenter = presenter
         
+        return view
+    }
+    
+    static func createFavoriteModule() -> UIViewController {
+        let view = FavoritesViewController()
+            
+        let presenter = FavoritesPresenter(view: view)
+        view.presenter = presenter
+        
+        return view
+    }
+    
+    static func createCategoriesModule() -> UIViewController {
+        let view = CategoriesViewController()
+        let presenter = CategoriesPresenter(view: view)
+        view.presenter = presenter
         return view
     }
 }
