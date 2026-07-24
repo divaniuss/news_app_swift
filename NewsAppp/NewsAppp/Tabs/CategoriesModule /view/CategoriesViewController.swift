@@ -119,19 +119,36 @@ class CategoriesViewController: UIViewController {
     @objc private func refreshNews() {
         presenter.refreshData()
     }
+    
+    private func createSpinnerFooter() -> UIView {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 100))
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.center = footerView.center
+        footerView.addSubview(spinner)
+        spinner.startAnimating()
+        return footerView
+    }
 }
 
 extension CategoriesViewController: CategoriesViewProtocol {
     func reloadTableData() {
-        tableView.reloadData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.tableView.tableFooterView = nil
+            self?.tableView.reloadData()
+        }
     }
     
     func showError(message: String) {
-        print("error fetch category or news - \(message)")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.tableView.tableFooterView = nil
+            print("error fetch category or news - \(message)")
+        }
     }
     
     func endRefreshing(){
-        refreshControl.endRefreshing()
+        DispatchQueue.main.async { [weak self] in
+            self?.refreshControl.endRefreshing()
+        }
     }
 }
 
@@ -196,5 +213,13 @@ extension CategoriesViewController: UITableViewDataSource, UITableViewDelegate {
         configuration.performsFirstActionWithFullSwipe = true
 
         return configuration
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let lastItemIndex = presenter.articles.count - 1
+        if indexPath.row == lastItemIndex {
+            tableView.tableFooterView = createSpinnerFooter()
+            presenter.loadNextPage()
+        }
     }
 }

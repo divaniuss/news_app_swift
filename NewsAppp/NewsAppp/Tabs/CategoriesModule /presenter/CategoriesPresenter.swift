@@ -16,6 +16,10 @@ class CategoriesPresenter: CategoriesPresenterProtocol {
     
     private var currentCategory: String = "business"
     
+    private var currentPage = 1
+    private var isFetching = false
+    private var isLastPage = false
+    
     init(view: CategoriesViewProtocol) {
         self.view = view
     }
@@ -25,12 +29,43 @@ class CategoriesPresenter: CategoriesPresenterProtocol {
         
         let formatCategory = category.lowercased()
         
+        currentPage = 1
+        isLastPage = false
+        isFetching = true
+    
         NetworkManager.shared.fetchTopHeadlines(category: formatCategory) { [weak self] result in
+            
+            self?.isFetching = false
             
             self?.view?.endRefreshing()
             switch result {
             case .success(let fetchedArticles):
                 self?.articles = fetchedArticles
+                self?.view?.reloadTableData()
+            case .failure(let error):
+                self?.view?.showError(message: error.localizedDescription)
+            }
+        }
+    }
+    
+    func loadNextPage() {
+        guard !isFetching, !isLastPage else { return }
+            
+        isFetching = true
+        currentPage += 1
+            
+        let formatCategory = currentCategory.lowercased()
+            
+        NetworkManager.shared.fetchTopHeadlines(category: formatCategory, page: currentPage) { [weak self] result in
+            self?.isFetching = false
+            
+            switch result {
+            case .success(let newArticles):
+                if newArticles.isEmpty {
+                    self?.isLastPage = true
+                    return
+                }
+                self?.articles.append(contentsOf: newArticles)
                 self?.view?.reloadTableData()
             case .failure(let error):
                 self?.view?.showError(message: error.localizedDescription)

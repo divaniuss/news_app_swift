@@ -18,4 +18,5 @@ protocol HomePresenterProtocol: AnyObject {
     func toggleFavorite(article: Article)
     func search(query: String)
     var articles: [Article] { get }
+    func loadNextPage()
 }

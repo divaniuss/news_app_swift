@@ -33,7 +33,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-//        title = "news"
+        //        title = "news"
         setupSearchController()
         setupTableView()
         presenter.getNews()
@@ -72,16 +72,31 @@ class HomeViewController: UIViewController {
     @objc private func refreshData() {
         presenter.getNews()
     }
+    
+    private func createSpinnerFooter() -> UIView {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 100))
+        let spinner = UIActivityIndicatorView(style: .medium)
+        spinner.center = footerView.center
+        footerView.addSubview(spinner)
+        spinner.startAnimating()
+        return footerView
+    }
 }
 
 extension HomeViewController: HomeViewProtocol {
     func success() {
-        tableView.reloadData()
-        refreshControl.endRefreshing()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.tableView.tableFooterView = nil
+            self?.tableView.reloadData()
+            self?.refreshControl.endRefreshing()
+        }
     }
     func failure(error: Error) {
-        print("Ошибка сети: \(error.localizedDescription)")
-        refreshControl.endRefreshing()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.tableView.tableFooterView = nil
+            print("Ошибка сети: \(error.localizedDescription)")
+            self?.refreshControl.endRefreshing()
+        }
     }
 }
 
@@ -135,6 +150,14 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         configuration.performsFirstActionWithFullSwipe = true
 
         return configuration
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let lastItemIndex = presenter.articles.count - 1
+        if indexPath.row == lastItemIndex {
+            tableView.tableFooterView = createSpinnerFooter()
+            presenter.loadNextPage()
+        }
     }
 }
 

@@ -14,14 +14,26 @@ class HomePresenter: HomePresenterProtocol {
     
     private var searchTimer: Timer?
     
+    private var currentPage = 1
+    private var isFetching = false
+    private var isLastPage = false
+    private var currentSearchQuery: String? = nil
+    
     required init(view: HomeViewProtocol, networkService: NetworkManager) {
         self.view = view
         self.networkService = networkService
     }
     
     func getNews() {
+        currentPage = 1
+        isLastPage = false
+        currentSearchQuery = nil
+        isFetching = true
+        
         networkService.fetchTopHeadlines(category: nil) { [weak self] result in
             guard let self = self else { return }
+            
+            self.isFetching = false
             
             switch result{
             case .success(let articles):
@@ -44,8 +56,15 @@ class HomePresenter: HomePresenterProtocol {
         searchTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
             guard let self = self else {return}
             
+            self.currentPage = 1
+            self.isLastPage = false
+            self.currentSearchQuery = query
+            self.isFetching = true
+            
             self.networkService.searchNews(query: query) { [weak self ] result in
                 guard let self = self else {return}
+                
+                self.isFetching = false
                 
                 switch result{
                 case .success(let articles):
@@ -58,6 +77,39 @@ class HomePresenter: HomePresenterProtocol {
             }
         }
             
+    }
+    
+    func loadNextPage(){
+        guard !isFetching, !isLastPage else { return }
+        
+        isFetching = true
+        currentPage += 1
+        
+        if let query = currentSearchQuery {
+            networkService.searchNews(query: query, page: currentPage) { [weak self] result in
+                self?.handleNextPageResult(result)
+                }
+            } else {
+                networkService.fetchTopHeadlines(category: nil, page: currentPage) { [weak self] result in
+                    self?.handleNextPageResult(result)
+                }
+            }
+    }
+    
+    private func handleNextPageResult(_ result: Result<[Article], NetworkError>) {
+        isFetching = false
+            
+        switch result {
+        case .success(let newArticles):
+            if newArticles.isEmpty {
+                isLastPage = true
+                return
+            }
+            self.articles.append(contentsOf: newArticles)
+            self.view?.success()
+        case .failure(let error):
+            self.view?.failure(error: error)
+            }
     }
 
     

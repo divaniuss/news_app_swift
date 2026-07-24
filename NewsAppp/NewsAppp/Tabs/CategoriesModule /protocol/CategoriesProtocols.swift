@@ -14,6 +14,7 @@ protocol CategoriesPresenterProtocol {
     func refreshData()
     func isSaved(article: Article) -> Bool
     func toggleFavorite(article: Article)
+    func loadNextPage()
 }
 
 
