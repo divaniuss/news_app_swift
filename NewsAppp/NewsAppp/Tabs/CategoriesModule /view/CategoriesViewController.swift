@@ -132,9 +132,10 @@ class CategoriesViewController: UIViewController {
 
 extension CategoriesViewController: CategoriesViewProtocol {
     func reloadTableData() {
+        tableView.reloadData()
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.tableView.tableFooterView = nil
-            self?.tableView.reloadData()
         }
     }
     
@@ -186,6 +187,9 @@ extension CategoriesViewController: UITableViewDataSource, UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let selectedArticle = presenter.articles[indexPath.row]
+        let detailVC = ModuleBuilder.createArticleDetailModule(article: selectedArticle)
+        navigationController?.pushViewController(detailVC, animated: true)
             
     }
     

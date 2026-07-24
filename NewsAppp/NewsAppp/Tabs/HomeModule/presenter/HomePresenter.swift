@@ -103,6 +103,7 @@ class HomePresenter: HomePresenterProtocol {
         case .success(let newArticles):
             if newArticles.isEmpty {
                 isLastPage = true
+                self.view?.success()
                 return
             }
             self.articles.append(contentsOf: newArticles)

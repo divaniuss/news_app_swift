@@ -63,6 +63,7 @@ class CategoriesPresenter: CategoriesPresenterProtocol {
             case .success(let newArticles):
                 if newArticles.isEmpty {
                     self?.isLastPage = true
+                    self?.view?.reloadTableData()
                     return
                 }
                 self?.articles.append(contentsOf: newArticles)

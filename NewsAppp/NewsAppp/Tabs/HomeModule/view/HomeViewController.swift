@@ -30,6 +30,18 @@ class HomeViewController: UIViewController {
         return table
     }()
     
+    private let emptyStateLabel: UILabel = {
+        let label = UILabel()
+        label.text = "По вашему запросу ничего не найдено"
+        label.textColor = .secondaryLabel
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.numberOfLines = 0
+        label.isHidden = true // Скрыт по умолчанию
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -42,6 +54,7 @@ class HomeViewController: UIViewController {
     
     private func setupTableView() {
         view.addSubview(tableView)
+        view.addSubview(emptyStateLabel)
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -54,7 +67,12 @@ class HomeViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            emptyStateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyStateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyStateLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            emptyStateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
     }
     
@@ -85,9 +103,12 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: HomeViewProtocol {
     func success() {
+        tableView.reloadData()
+        
+        emptyStateLabel.isHidden = !presenter.articles.isEmpty
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.tableView.tableFooterView = nil
-            self?.tableView.reloadData()
             self?.refreshControl.endRefreshing()
         }
     }
@@ -123,7 +144,8 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         tableView.deselectRow(at: indexPath, animated: true)
         let selectedArticle = presenter.articles[indexPath.row]
-        print("нажали на \(selectedArticle.title)")
+        let detailVC = ModuleBuilder.createArticleDetailModule(article: selectedArticle)
+        navigationController?.pushViewController(detailVC, animated: true)
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -165,8 +187,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
 extension HomeViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let text =  searchController.searchBar.text else { return }
-        
+        emptyStateLabel.isHidden = true
         presenter.search(query: text)
     }
 }
-//ДОДЕЛАТЬ С WKWebView ОКНО НА НОВОСТЬ
